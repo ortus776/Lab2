@@ -90,6 +90,7 @@ public class main {
     public static PrintStream out = System.out;
     public static void main(String[] args){
         int x, y, z;
+        // пользователь вводит элементы пока они не станут корректными
         do {
             out.println("Введите корректные размеры массива (x, y, z)");
             x = in.nextInt();
@@ -100,6 +101,7 @@ public class main {
 
         double[][][] arr = new double[z][y][x];
         out.println("Введите элементы массива");
+        // вводим элементы массива
         for(int i = 0; i < z; i++){
             for (int j = 0; j < y; j++){
                 for (int k = 0; k < x; k++){
@@ -107,45 +109,38 @@ public class main {
                 }
             }
         }
+        // перебираем элементы массива, фиксируем arr[i][j] и сортируем его элементы
         for(int i = 0; i < z; i++){
             for (int j = 0; j < y; j++){
                 // сортировка
-                boolean swapped = false;
                 double temp;
                 for (int a = 0; a < x * 2; a++){ // x * 2 потому что после сортировки по дробной части x могло не хватать и оставались неотсортированные по целой части числа;
+                    boolean swapped = false; // ни одна пара элементов не поменялась
                     for(int b = 0; b < x - 1;b++){
-                        // по убыванию дробной части
-                        if (arr[i][j][b] % 1 < arr[i][j][b + 1] % 1){
+                        // если дробная часть arr[i][j][b] больше arr[i][[j][b] или дробные части равны и arr[i][j][b] больше arr[i][j][b + 1]
+                        if (arr[i][j][b] % 1 < arr[i][j][b + 1] % 1 || arr[i][j][b] % 1 == arr[i][j][b + 1] % 1 && arr[i][j][b] > arr[i][j][b + 1]){
+                            // меняем их местами
                             temp = arr[i][j][b + 1];
                             arr[i][j][b + 1] = arr[i][j][b];
                             arr[i][j][b] = temp;
-                            swapped = true;
-                        }
-                        // если дробные части равны, то сортируем по целой
-                        else{
-                            if (arr[i][j][b] % 1 == arr[i][j][b + 1] % 1 && arr[i][j][b] > arr[i][j][b + 1]){
-                                temp = arr[i][j][b + 1];
-                                arr[i][j][b + 1] = arr[i][j][b];
-                                arr[i][j][b] = temp;
-                                swapped = true;
-                            }
+                            swapped = true; //  пара элементов поменялась местами
                         }
                     }
-                    if (!swapped){
+                    if (!swapped){ // если ни одна пара элементов не поменялась местами, то завершаем цикл
                         break;
                     }
                 }
             }
         }
-        for (int i = 0; i < z; i++){
-            // находим среднее геометрическое каждого слоя
+        // находим среднее геометрическое каждого слоя
+        for (int i = 0; i < z; i++){  // фиксируем массив по z
             double geom = 1; // среднее геометрическое
             for (int j = 0; j < y; j++){
                 for(int k = 0; k < x; k++){
-                    geom *= arr[i][j][k];
+                    geom *= arr[i][j][k]; // перемножаем все элементы слоя
                 }
             }
-            geom = Math.pow(geom, 1/(double)(x*y));
+            geom = Math.pow(geom, 1/(double)(x*y)); // берем от geom корень степни x*y (количество элементов в слое)
             out.println(geom);
         }
         // вывод массива
@@ -156,23 +151,28 @@ public class main {
                 }
             }
         }
+        // проходимся по всем элементам массива
         for(int i = 0; i < z; i++){
             for (int j = 0; j < y; j++){
                 for (int k = 0; k < x; k++){
-                    arr[i][j][k] = (double)Math.round(arr[i][j][k] * 100d) / 100d; // округление до 2 знаков
+                    arr[i][j][k] = (double)Math.round(arr[i][j][k] * 100d) / 100d; // округляем до 2 знаков после запятой
                 }
             }
         }
+        out.println(); // разделение между выводами массивов
         // вывод массива после округления
         for (int i = 0; i < z; i++){
             for (int j = 0; j < y; j++){
                 for (int k = 0; k < x; k++){
-                    out.printf("%d, %d, %d : %f\n", k, j, i, arr[i][j][k]);
+                    out.print(arr[i][j][k] + " ");
                 }
+                out.println(); // разделение строк
             }
+            out.println(); // разделение слоев
         }
     }
 }
+
 
 ```
 
